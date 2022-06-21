@@ -1,114 +1,140 @@
 """
-abre e busca dentro do arquivo de log.
+Open all log files on the current folder and search for all
+occurrences of the given arguments.
 """
+
+__version__ = '1.1.0'
+__author__ = 'Guto Hertzog'
 
 import os
 import sys
 
 
-def limpa_tela() -> None:
+RESP_TIME = 'seg='
+LOG_EXT = '.log'
+
+
+def clear_screen() -> None:
     """
-    Função para limpar a tela.
+    Clear screen function. of any os.
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def busca_log() -> list:
+def get_logs() -> list:
     """
-    Função para buscar o arquivo .log na pasta onde está o arquivo python.
-    Se houver mais de um arquivo, retornará uma lista com todos eles para
-    realizar a busca em todos.
-    """
-    # busca por todos os itens na pasta
-    arquivos = os.listdir()
+    Search by all log files on the current directory of this python file.
 
-    # separa e retorna apenas os arquivos .log
-    logs = [arquivo for arquivo in arquivos if '.log' in arquivo]
+    return -- a list of all log files founded.
+    """
+    everything = os.listdir()
+
+    logs = []
+    # Passes through all files and folders of the current directory
+    for item_name in everything:
+        # Gets the last 4 chars, that it's the file extension
+        end = item_name[-4:]
+        if end == LOG_EXT:
+            logs.append(item_name)
+
     return logs
 
 
-def busca_em_log(log:str, termo:str, seg:bool = False):
+def find_all(log:str, arg:str, sec: bool = False) -> None:
     """
-    Função para buscar um termo em um arquivo de log.
-    Ao final, vai salvar um novo arquivo com o resultado da busca.
-    """
-    linhas = []
-    with open(log, 'r', encoding='utf-8') as arq:
-        linhas =  arq.readlines()
+    Function that will pass through all lines of the log for the desired arg.
+    Every match will be stored on a variable and, at the end, saved into a file
+    with the name pattern \n <arg>-<log>.txt
 
-    # verifica é para buscar pelo tempo de resposta
-    if seg:
-        filtrado = []
-        for linha in linhas:
-            teste = linha.split(' ')
-            # verifica se o último item da lista (o tempo de resposta) é maior
-            # ou igual que o tempo especificado
-            if int(teste[-1]) >= int(termo):
-                filtrado.append(linha)
-        termo = 'seg=' + termo
-    # passa por cada linha do log procurando pelo termo
+    Keyword arguments:\n
+    log -- nome of the log file to be open;\n
+    arg -- argument to be search inside the file;\n
+    sec -- checker if should search for load page time;
+    """
+    lines = []
+    with open(log, 'r', encoding='utf-8') as file:
+        lines =  file.readlines()
+
+    matches = []
+
+    ########## SPECIFIC BEGINS ##########
+    # Check if sec was send as argument
+    if sec:
+        for line in lines:
+            temp_list = line.split(' ')
+            # Checks if the last item of the list (response time) is bigger
+            # than the time argument specified
+            if int(temp_list[-1]) >= int(arg):
+                matches.append(line)
+        arg = RESP_TIME + arg
+    ########## SPECIFIC ENDS ##########
+    # Search for regular arguments
     else:
-        filtrado = [linha for linha in linhas if termo in linha]
+        matches = [line for line in lines if arg in line]
 
-    # se algum registro foi encontrado acima, salva em um arquivo .txt
-    if filtrado:
-        # remove a extensão .log do nome do arquivo
-        log = log.replace('.log','')
-        # nome do arquivo onde será salvo o resultado
-        nome = termo + '-' + log + '.txt'
+    # Only creates a file if any match was found
+    if matches:
+        # Remove log extension from log file name
+        log = log.replace(LOG_EXT,'')
+        # Creates the file name with the argument and log file name
+        nome = arg + '-' + log + '.txt'
         with open(nome, 'w', encoding='utf-8') as arq:
-            arq.writelines(filtrado)
-        print(f'Arquivo {nome} salvo.\n')
+            arq.writelines(matches)
+        print(f'File {nome} saved.\n')
     else:
-        print(f'O termo {termo} não foi encontado em {log}.')
+        print(f"The argument {arg} wasn't found in {log}.")
 
 
 def start():
     """
-    Função principal do programa.
+    Main function of the program.
     """
-    logs = busca_log()
+    logs = get_logs()
 
-    # se nenhum arquivo .log foi encontrado, encerra o programa
+    # If no log file was found in the current directory, exits the program
     if len(logs) == 0:
-        print('\n\tArquivo Não Encontrado\n')
-        print('Nenhum arquivo .log encontrado na pasta.')
-        print('Verifique se o arquivo .log está na mesma')
-        print('pasta que o arquivo python.')
-        return
+        print('\n\tFile Not Found\n')
+        print('No .log file was found in the current directory.')
+        print('Checks if the log file is in the same folder')
+        print('than this python file.')
+        return None
 
-    # se não for passado nenhum argumento, encerra o programa
+    # No argument was send when the file was executed
     if len(sys.argv) == 1:
-        print('\n\tArgumentos Insuficientes\n')
-        print('Faltou especificar um ou mais argumentos de busca.')
-        print('\nExemplo: python main.py <termo_busca_1> <termo_busca_2> etc')
-        return
+        print('\n\tInsufficient Arguments\n')
+        print('You need to specify one or more arguments')
+        print('when executing the file.')
+        print('\nExample: python main.py <argument_1> <argument_2> etc')
+        return None
 
-    # foi encontrado pelo menos um arquivo .log e inserido pelo menos um
-    # parâmetro, então está seguro continuar com a busca nos logs
-    # separa todos os argumentos a serem buscados
+    # At least one argument and one log file were found, so all the arguments
+    # to be searched in log files are stored in separate a variable
     args = sys.argv[1:]
 
-    # passa por todos os aquivos de logs, um de cada vez
     for log in logs:
-        # passa por cada argumento procurando em cada log
         for arg in args:
-            # verifica se é para buscar pelo tempo de resposta
-            if 'seg=' in arg:
-                arg = arg.replace('seg=','')
+            ########## SPECIFIC BEGINS ##########
+            # Checks if shoud search by response time
+            if RESP_TIME in arg:
+                arg = arg.replace(RESP_TIME,'')
                 try:
-                    arg = int(arg)
+                    int(arg)
                 except ValueError:
-                    print('\nO valor inserido para segundos não é válido!')
+                    print('The seconds value sent is not valid!')
                 else:
-                    busca_em_log(log, str(arg), True)
+                    find_all(log, arg, True)
+                # If the integer castinf fails or succeed, goes to the next
+                # argument or log file
                 finally:
                     continue
+            ########## SPECIFIC ENDS ##########
             else:
-                busca_em_log(log, arg)
+                find_all(log, arg)
+
+    return None
 
 
 if __name__ == "__main__":
-    limpa_tela()
+    clear_screen()
     start()
     sys.exit()
