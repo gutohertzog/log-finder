@@ -1,2 +1,2 @@
 # log-finder
-Script to find registers based on argument inside Apache log files.
+Script to find registers based on arguments inside Apache log files.
