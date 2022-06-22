@@ -4,40 +4,46 @@ Script to find registers with specific arguments inside Apache log files.
 
 
 ## Running the script
-To execute, just run like below:
+To execute, just run like the examples below:
 
 ```
-python main.py arg1 arg2 etc
+$ python main.py 192.168.0.0  # here, it'll look up for all occurrences of the given IP address
+$ python main.py -iPhone  # here, it'll look up for all occurrences that doesn't have the word 'iPhone'
+$ python main.py sec=60  # here, it'll look up for a request time equal or greater than 1 minute
+```
+
+You can use multiple arguments too:
+```
+$ python main.py 192.168.0.0 sec=60 -iPhone  # here, it's doing all the searches above with one command
 ```
 
 
 ## Specificity
 The Apache log file can be configured with several different ways. See [Apache Log Documentation v2.4](https://httpd.apache.org/docs/2.4/logs.html) for more information.
 
-For this, in specific, the time request is the last item configured.
-
-If you want to reuse it to find the request time, you will have to change the code a bit. Check for the comments (like below) to see where to change.
-```py
-########## SPECIFIC BEGINS ##########
-# code
-########## SPECIFIC ENDS ##########
-```
-If you don't want the request time, you can change the `if RESP_TIME in arg:` condition to `if False:` (it's really ugly, I know). I will improve it later.
+Once you have the exact arrangement of your log file, the exact position of your time request, you will only have to change the index value in `I_REQ_TIME`.
 
 
 ## TODO
-* [ ] Add 3 separate criterias to use on the match system.
-    * [ ] Inclusive search.
-    * [ ] Exclusive search.
-    * [ ] Search by time to execute.
+* [ ] Implement multiple criterias per search. Now, it's only one per file.
 
 
 ## Update History
-* v1.1.0: English Update
+* v1.2.0: Includent Excludent Update:
+    * Fixed minor translations.
+    * Constant for encoding format.
+    * Better variable names.
+    * Better documentation.
+    * Added specific searches:
+        * Includents: search all matches of the arguments.
+        * Excludents: search all except the matches with the prefix '-'.
+        * sec=: search by time request (greater or equal) at in specific position, given the `I_REQ_TIME` value.
+    * Fixed the issue with the request time search.
+* v1.1.0: English Update:
     * Translated to english.
     * Readme improved.
     * Better documentation.
     * Minor code improvements.
-* v1.0.0: First Commit
+* v1.0.0: First Commit:
     * Repository creation.
     * First version added (in Portuguese and poor documentation).
