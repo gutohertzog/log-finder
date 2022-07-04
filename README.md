@@ -29,7 +29,7 @@ Once you have the exact arrangement of your log file, the exact position of your
 
 
 ## Update History
-* v1.2.1: Better comments:
+* v1.2.1: Better Comments and Messages:
     * Better documentation.
     * Messages of starting and ending.
 * v1.2.0: Includent Excludent Update:
