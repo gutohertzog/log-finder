@@ -3,7 +3,7 @@ Open all log files in the current folder and apply the criteria (sent by
 command line) of searches to find or exclude matches.
 """
 
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 __author__ = 'Guto Hertzog'
 
 import os
@@ -17,17 +17,15 @@ RESP_TIME = 'sec='
 
 
 def clear_screen() -> None:
-    """
-    Clear screen function. of any os.
-    """
+    """Clear screen function of any OS."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def get_logs() -> list:
-    """
-    Search by all log files on the current directory of this python file.
+    """Search by all log files on the current directory of this python file.
 
-    return -- a list of all log files founded;
+    Returns:
+        logs (list): A list of all log files founded in the folder.
     """
     everything = os.listdir()
 
@@ -38,28 +36,32 @@ def get_logs() -> list:
 
 
 def read_log_file(log:str) -> list:
-    """
-    Function to read the log file from the disc.
+    """Function to read the log file from the disc.
 
-    log -- name of the log file to be open;\n
-    return -- list with all the records;
+    Args:
+        log (str): Name of the log file to be open.
+
+    Returns:
+        list: A list with all the records.
     """
     with open(log, 'r', encoding=ENCODING) as file:
         return file.readlines()
 
 
 def save_found_records(matches:list, name:str, arg:str, log:str) -> None:
-    """
-    Function to test if at least one match was found.
+    """Function to test if at least one match was found.
     If found, it'll will be saved into a file with the name pattern below.
 
-    i-<arg>-<log>.txt -- for includents
-    e-<arg>-<log>.txt -- for excludents
+    Examples:
+        i-<arg>-<log_file_name>.txt: For includents.
+        e-<arg>-<log_file_name>.txt: For excludents.
+        sec=<time>-<log_file_name>.txt: For request time.
 
-    matches -- list with all matches found inside a log file;\n
-    name -- first part of the file name;\n
-    arg -- just sent to show the argument when nothing is found;\n
-    log -- sent to create the text file name;
+    Args:
+        matches (list): A list with all matches found inside a log file.
+        name (str): First part of the file name.
+        arg (str): Just sent to show the argument when nothing is found.
+        log (str): Sent to create the text file name.
     """
     if matches:
         # Replace the log extension for text extension
@@ -79,12 +81,14 @@ def save_found_records(matches:list, name:str, arg:str, log:str) -> None:
 
 
 def split_args(args:list) -> list:
-    """
-    Function to check all the received arguments and split them into three
+    """Function to check all the received arguments and split them into three
     different lists.
 
-    args -- a list of arguments to be splited;\n
-    return -- 3 lists with all conditions to search for;
+    Args:
+        args (list): A list of arguments to be splited.
+
+    Returns:
+        return (list): Three lists with all conditions to search for.
     """
     includents = []
     excludents = []
@@ -112,16 +116,18 @@ def split_args(args:list) -> list:
 
 
 def search_records(log:str, arg:str, include:bool) -> None:
-    """
-    Function that will pass through all records of the log.
+    """Function that will pass through all records of the log.
+
     If the include is True (includent), all the records that match the arg
     will be saved.
+
     If the include is False (excludent), will only save the records that
     DON'T match the arg.
 
-    log -- name of the log file to be open;\n
-    arg -- argument to be searched in every record of the file;\n
-    include -- check if the arg is includent or excludent;
+    Args:
+        log (str): Name of the log file to be open.
+        arg (str): Argument to be searched in every record of the file.
+        include (bool): Checks if the arg is includent or excludent.
     """
     lines = read_log_file(log)
 
@@ -137,12 +143,12 @@ def search_records(log:str, arg:str, include:bool) -> None:
 
 
 def search_by_time(log:str, arg:str) -> None:
-    """
-    Function that will pass through all records of the log looking for the
+    """Function that will pass through all records of the log looking for the
     request time. It'll match if it's greater or equal.
 
-    log -- name of the log file to be open;\n
-    arg -- argument to be searched in every record of the file;
+    Args:
+        log (str): Name of the log file to be open.
+        arg (str): Argument to be searched in every record of the file.
     """
     lines = read_log_file(log)
 
@@ -160,9 +166,9 @@ def search_by_time(log:str, arg:str) -> None:
 
 
 def start() -> None:
-    """
-    Main function of the program.
-    """
+    """Main function of the program."""
+    print('Begenning search.\n')
+
     logs = get_logs()
 
     # No log file was found in the current directory, exits the program
@@ -192,6 +198,9 @@ def start() -> None:
             search_records(log, excl, False)
         for sec in seconds:
             search_by_time(log, sec)
+
+    print('\nSearch completed.')
+
     return None
 
 

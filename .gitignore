@@ -9,3 +9,7 @@ __pycache__/
 # Log Files #
 #############
 *.log
+
+# text Files Generated #
+########################
+*.txt
