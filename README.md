@@ -29,6 +29,9 @@ Once you have the exact arrangement of your log file, the exact position of your
 
 
 ## Update History
+* v1.3.0 beta: ArgumentParser:
+    * Adding argument parser to project.
+    * Use of Path library to manage files.
 * v1.2.1: Better Comments and Messages:
     * Better documentation.
     * Messages of starting and ending.

@@ -3,11 +3,13 @@ Open all log files in the current folder and apply the criteria (sent by
 command line) of searches to find or exclude matches.
 """
 
-__version__ = '1.2.1'
+__version__ = 'v1.3.0 beta'
 __author__ = 'Guto Hertzog'
 
+import argparse
 import os
 import sys
+from pathlib import Path
 
 
 ENCODING = 'utf-8'
@@ -30,12 +32,17 @@ def get_logs() -> list:
     everything = os.listdir()
 
     # The item[-4:] is for file extension
-    logs = [item for item in everything if item[-4:] == LOG_EXT]
+    # logs = [item for item in everything if item[-4:] == LOG_EXT]
+    logs = []
+    for item in everything:
+        item = Path(item)
+        if item.suffix == LOG_EXT:
+            logs.append(item)
 
     return logs
 
 
-def read_log_file(log:str) -> list:
+def read_log_file(log: str) -> list:
     """Function to read the log file from the disc.
 
     Args:
@@ -48,7 +55,7 @@ def read_log_file(log:str) -> list:
         return file.readlines()
 
 
-def save_found_records(matches:list, name:str, arg:str, log:str) -> None:
+def save_found_records(matches: list, name: str, arg: str, log: str) -> None:
     """Function to test if at least one match was found.
     If found, it'll will be saved into a file with the name pattern below.
 
@@ -65,7 +72,7 @@ def save_found_records(matches:list, name:str, arg:str, log:str) -> None:
     """
     if matches:
         # Replace the log extension for text extension
-        log = log.replace(LOG_EXT,'.txt')
+        log = log.replace(LOG_EXT, '.txt')
         file_name = name + '-' + log
 
         with open(file_name, 'w', encoding=ENCODING) as file:
@@ -80,7 +87,7 @@ def save_found_records(matches:list, name:str, arg:str, log:str) -> None:
             print(f"The argument {arg} wasn't found in {log} file.")
 
 
-def split_args(args:list) -> list:
+def split_args(args: list) -> list:
     """Function to check all the received arguments and split them into three
     different lists.
 
@@ -100,7 +107,7 @@ def split_args(args:list) -> list:
             excludents.append(arg[1:])
         elif RESP_TIME in arg:
             # Remove the RESP_TIME value to test the integer part
-            arg = arg.replace(RESP_TIME,'')
+            arg = arg.replace(RESP_TIME, '')
             try:
                 int(arg)
             except ValueError:
@@ -115,7 +122,7 @@ def split_args(args:list) -> list:
     return includents, excludents, seconds
 
 
-def search_records(log:str, arg:str, include:bool) -> None:
+def search_records(log: str, arg: str, include: bool) -> None:
     """Function that will pass through all records of the log.
 
     If the include is True (includent), all the records that match the arg
@@ -142,7 +149,7 @@ def search_records(log:str, arg:str, include:bool) -> None:
     save_found_records(matches, name, arg, log)
 
 
-def search_by_time(log:str, arg:str) -> None:
+def search_by_time(log: str, arg: str) -> None:
     """Function that will pass through all records of the log looking for the
     request time. It'll match if it's greater or equal.
 
@@ -165,8 +172,45 @@ def search_by_time(log:str, arg:str) -> None:
     save_found_records(matches, arg, arg, log)
 
 
+def arg_parser():
+    """
+    arg parser do programa
+    """
+    parser = argparse.ArgumentParser(
+        prog='log-finder',
+        description='search for common words in log files')
+
+    # group = parser.add_mutually_exclusive_group(required=True)
+
+    parser.add_argument('-v', '--version', action="version",
+                        version=f'%(prog)s {__version__}')
+    parser.add_argument('-i', '--inc', action="append", nargs="+",
+                        type=str, help='argument to be included on the search')
+    parser.add_argument('-e', '--exc', action="extend", nargs="+",
+                        type=str,
+                        help='argument to be excluded from the search')
+    parser.add_argument('-s', '--sec', type=int,
+                        help='search by the req time equals or greater than')
+
+    args = parser.parse_args()
+
+    print(args)
+    sys.exit()
+
+
 def start() -> None:
     """Main function of the program."""
+
+    arg_parser()
+
+    # No argument was sent when the file was executed, exits the program
+    if len(sys.argv) == 1:
+        print('\n\tInsufficient Arguments\n')
+        print('You need to specify one or more arguments')
+        print('when executing the file.')
+        print('\nExample: python main.py <argument_1> <argument_2> etc')
+        return None
+
     print('Begenning search.\n')
 
     logs = get_logs()
@@ -179,18 +223,11 @@ def start() -> None:
         print('than this python file.')
         return None
 
-    # No argument was sent when the file was executed, exits the program
-    if len(sys.argv) == 1:
-        print('\n\tInsufficient Arguments\n')
-        print('You need to specify one or more arguments')
-        print('when executing the file.')
-        print('\nExample: python main.py <argument_1> <argument_2> etc')
-        return None
-
     # At least one argument and one log file were found, so all the arguments
     # to be searched in the log files are passed to the function to split them
     includents, excludents, seconds = split_args(sys.argv[1:])
 
+    clear_screen()
     for log in logs:
         for incl in includents:
             search_records(log, incl, True)
@@ -205,6 +242,5 @@ def start() -> None:
 
 
 if __name__ == "__main__":
-    clear_screen()
     start()
     sys.exit()
