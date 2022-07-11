@@ -4,18 +4,7 @@ Script to find registers with specific arguments inside Apache log files.
 
 
 ## Running the script
-To execute, just run like the examples below:
-
-```
-$ python main.py 192.168.0.0  # here, it'll look up for all occurrences of the given IP address
-$ python main.py -iPhone  # here, it'll look up for all occurrences that doesn't have the word 'iPhone'
-$ python main.py sec=60  # here, it'll look up for a request time equal or greater than 1 minute
-```
-
-You can use multiple arguments too:
-```
-$ python main.py 192.168.0.0 sec=60 -iPhone  # here, it's doing all the searches above with one command
-```
+Needs to be updated.
 
 
 ## Specificity
@@ -32,6 +21,7 @@ Once you have the exact arrangement of your log file, the exact position of your
 * v1.3.0 beta: ArgumentParser:
     * Adding argument parser to project.
     * Use of Path library to manage files.
+    * Better comments.
 * v1.2.1: Better Comments and Messages:
     * Better documentation.
     * Messages of starting and ending.
