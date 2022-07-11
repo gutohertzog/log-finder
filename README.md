@@ -29,7 +29,7 @@ In the future, I'm going to add a flag to combine two or more arguments into one
 <div id='specif'>
 
 ## Specificity
-The Apache log file can be configured with several different ways. See [Apache Log Documentation v2.4](https://httpd.apache.org/docs/2.4/logs.html) for more information.
+The Apache log file can be configured with several different ways. See <a href="https://httpd.apache.org/docs/2.4/logs.html" target="_blank">Apache Log Documentation v2.4</a> for more information.
 
 Once you have the exact arrangement of your log file, the exact position of your time request, you will only have to change the index value in `I_REQ_TIME`.
 </div>
