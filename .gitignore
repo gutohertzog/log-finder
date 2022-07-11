@@ -10,6 +10,6 @@ __pycache__/
 #############
 *.log
 
-# text Files Generated #
+# Text Files Generated #
 ########################
 *.txt
