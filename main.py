@@ -75,7 +75,7 @@ def save_found_records(matches: list, name: str, log: Path) -> None:
     with open(file_name, 'w', encoding=ENCODING) as file:
         file.writelines(matches)
 
-    print(f'File {file_name} saved.')
+    print(f'File {file_name} saved with {len(matches)} matches.')
 
 
 def search_records(log: str, arg: str, include: bool) -> None:

@@ -1,9 +1,14 @@
+<div id='top'></div>
+
+<div align='center'>
 # log-finder
+</div>
+
 
 Script to find registers with specific arguments inside Apache log files.
 
-<div id='running'>
 
+<div id='running'></div>
 ## Running the script
 Now, you can run the script to search for multiples arguments from many ways.
 
@@ -23,23 +28,30 @@ $ python main.py -i 192.168. abc -e Mozilla -s 10 -i Chrome  # all searches comb
 ```
 For now, all the searches are independent of each other.
 In the future, I'm going to add a flag to combine two or more arguments into one search pattern.
-</div>
+
+<p align='right'>(<a href='#top'>back to top</a>)</p>
 
 
-<div id='specif'>
-
+<div id='specif'></div>
 ## Specificity
 The Apache log file can be configured with several different ways. See <a href="https://httpd.apache.org/docs/2.4/logs.html" target="_blank">Apache Log Documentation v2.4</a> for more information.
 
 Once you have the exact arrangement of your log file, the exact position of your time request, you will only have to change the index value in `I_REQ_TIME`.
-</div>
+
+<p align='right'>(<a href='#top'>back to top</a>)</p>
 
 
+<div id='todo'></div>
 ## TODO
+* [ ] Implement a log file with the amount of results, the history of searches and its matches.
 * [ ] Implement multiple criterias per search. Now, it's only one per file.
 
 
+<div id='history'></div>
 ## Update History
+* v1.3.1: Match Counter:
+    * Added matches counter.
+    * Better README.
 * v1.3.0: ArgumentParser:
     * Argument Parser added to project.
         * See <a href="#running">Running the script</a> for details.
@@ -68,3 +80,6 @@ Once you have the exact arrangement of your log file, the exact position of your
 * v1.0.0: First Commit:
     * Repository creation.
     * First version added (in Portuguese and poor documentation).
+
+<p align='center'>(<a href='#top'>back to top</a>)</p>
+
