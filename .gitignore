@@ -13,3 +13,7 @@ __pycache__/
 # Text Files Generated #
 ########################
 *.txt
+
+# Log File Allowed for Testes #
+###############################
+!apache_logs.log

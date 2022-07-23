@@ -48,13 +48,29 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='todo'></div>
 
 ## TODO
-* [ ] Implement a log file with the amount of results, the history of searches and its matches.
 * [ ] Implement multiple criterias per search. Now, it's only one per file.
+
+<div id='done'></div>
+
+## DONE
+* [ X ] Implement a log file with the history of searches.
 
 
 <div id='history'></div>
 
 ## Update History
+* v1.4.0: Logger and Multifiles:
+    * The search now is case-insensitive.
+    * Created `logger.py` to manage the log file `log-finder-log`.
+    * Created `__init__.py` file to store version and author.
+    * Created `parser.py` file to manipulate argparser functions.
+    * Created `remove_txt.py` file to remove all the results of the search. For development.
+    * Better code organization with the creation of `util.py` file.
+    * Better code inside `main.py` file.
+    * Added the log file `apache_logs.log` for tests.
+    * Fixed some Engllish misspell.
+    * `.gitignore` updated.
+    * `README.md` updated.
 * v1.3.1: Match Counter:
     * Added matches counter.
     * Better README.
@@ -87,5 +103,4 @@ Once you have the exact arrangement of your log file, the exact position of your
     * Repository creation.
     * First version added (in Portuguese and poor documentation).
 
-<p align='center'>(<a href='#top'>back to top</a>)</p>
-
+<p align='right'>(<a href='#top'>back to top</a>)</p>
