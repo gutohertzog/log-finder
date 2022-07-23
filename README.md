@@ -53,7 +53,7 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='done'></div>
 
 ## DONE
-* [ X ] Implement a log file with the history of searches.
+* [X] Implement a log file with the history of searches.
 
 
 <div id='history'></div>
