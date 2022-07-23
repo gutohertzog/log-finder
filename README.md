@@ -30,7 +30,9 @@ $ python main.py -s 15 10 1 90  # get all records that the request time is great
 $ python main.py -i 192.168. abc -e Mozilla -s 10 -i Chrome  # all searches combined
 ```
 For now, all the searches are independent of each other.
-In the future, I'm going to add a flag to combine two or more arguments into one search pattern.
+In the future, I'm going to add a possibility to combine two or more arguments into one search pattern.
+
+No dependencies are needed to run this script.
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>
 
@@ -59,6 +61,9 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='history'></div>
 
 ## Update History
+* v1.4.1: Source Folder:
+    * Created a `source` folder for the code.
+    * Fixed an issue with the last commit.
 * v1.4.0: Logger and Multifiles:
     * The search now is case-insensitive.
     * Created `logger.py` to manage the log file `log-finder-log`.

@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import util as u
+import source.util as u
 
 
 def start() -> None:
@@ -23,8 +23,8 @@ def clear_txts() -> None:
     for item in os.listdir():
         item = Path(item)
         if item.name[:2] in u.PREFIXES and item.suffix == u.TXT_EXT:
-            print(f'Removing {item.name} file.')
             os.remove(item)
+            print(f'{item.name} file removed.')
             counter += 1
 
     # informative message

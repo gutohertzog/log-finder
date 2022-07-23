@@ -2,7 +2,7 @@
 
 import argparse
 
-from . import __version__
+import source.util as u
 
 
 def arg_parser() -> list:
@@ -18,7 +18,7 @@ def arg_parser() -> list:
 
     parser.add_argument('-v', '--version',
                         action="version",
-                        version=f'%(prog)s {__version__}')
+                        version=f'%(prog)s {u.__version__}')
     parser.add_argument('-i', '--inc',
                         action="extend",
                         default=[],
