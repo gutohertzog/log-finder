@@ -3,24 +3,30 @@
 <div align='center'>
 
 # log-finder
-
 </div>
 
 
 Script to find registers with specific arguments inside Apache log files.
 
+<div id='about'></div>
+
+## About
+This project come to my mind because a lack of a way to track some registers inside a 300Mb Apache log file.
+I'll keep it working with a single file and no dependencies at all.
+
+<p align='right'>(<a href='#top'>back to top</a>)</p>
 
 <div id='running'></div>
 
 ## Running the script
-Now, you can run the script to search for multiples arguments from many ways.
+You can run the script to search for multiples arguments from many ways.
 
 * `-i`: used to search for matching patterns over every line of the log file.
 * `-e`: used to get only the registers that `DON'T` match the arguments.
 * `-s`: used to get the request time. See <a href="#specif">Specificity</a> for more information.
 
 In all three ways, you can search using multiple arguments at once separated by a space only. They can even be combined, like the examples below.
-But, every argument of the search will be saved into a separate text file.
+Every argument of the search will be saved into a separate text file.
 
 Below are some examples of how you can run it:
 ```
@@ -29,10 +35,6 @@ $ python main.py -e Mozilla 192.168.1.  # get all records that DON'T have Mozill
 $ python main.py -s 15 10 1 90  # get all records that the request time is greater or equal than 15 or 10 or 1 or 90 seconds
 $ python main.py -i 192.168. abc -e Mozilla -s 10 -i Chrome  # all searches combined
 ```
-For now, all the searches are independent of each other.
-In the future, I'm going to add a possibility to combine two or more arguments into one search pattern.
-
-No dependencies are needed to run this script.
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>
 
@@ -51,19 +53,24 @@ Once you have the exact arrangement of your log file, the exact position of your
 
 ## TODO
 * [ ] Implement multiple criterias per search. Now, it's only one per file.
+* [ ] Make a better logger.
 
 <div id='done'></div>
 
 ## DONE
 * [X] Implement a log file with the history of searches.
 
+<p align='right'>(<a href='#top'>back to top</a>)</p>
+
 
 <div id='history'></div>
 
 ## Update History
-* v1.4.1: Source Folder:
-    * Created a `source` folder for the code.
-    * Fixed an issue with the last commit.
+* v1.5.0: One File To Rule Them All:
+    * Reversed back to a single file.
+* ~~v1.4.1: Source Folder~~ (silly update):
+    * ~~Created a `source` folder for the code.~~
+    * ~~Fixed an issue with the last commit.~~
 * v1.4.0: Logger and Multifiles:
     * The search now is case-insensitive.
     * Created `logger.py` to manage the log file `log-finder-log`.

@@ -7,7 +7,9 @@ import os
 import sys
 from pathlib import Path
 
-import source.util as u
+
+TXT_EXT = '.txt'
+PREFIXES = ['i-', 'e-', 's-']
 
 
 def start() -> None:
@@ -22,7 +24,7 @@ def clear_txts() -> None:
     # loop through all files and folders
     for item in os.listdir():
         item = Path(item)
-        if item.name[:2] in u.PREFIXES and item.suffix == u.TXT_EXT:
+        if item.name[:2] in PREFIXES and item.suffix == TXT_EXT:
             os.remove(item)
             print(f'{item.name} file removed.')
             counter += 1
@@ -32,7 +34,12 @@ def clear_txts() -> None:
         print('No text file found.')
 
 
+def clear_screen() -> None:
+    """Clear screen function of any OS."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 if __name__ == "__main__":
-    u.clear_screen()
+    clear_screen()
     start()
     sys.exit()
