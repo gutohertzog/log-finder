@@ -2,7 +2,7 @@
 all the matches.
 """
 
-__version__ = 'v1.4.2'
+__version__ = 'v1.5.0'
 __author__ = 'Guto Hertzog'
 
 
