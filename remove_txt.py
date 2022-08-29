@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 
 
-TXT_EXT = '.txt'
-PREFIXES = ['i-', 'e-', 's-']
+TXT_EXT: str = '.txt'
+PREFIXES: list[str] = ['i-', 'e-', 's-']
 
 
 def start() -> None:
@@ -19,11 +19,11 @@ def start() -> None:
 
 def clear_txts() -> None:
     """Remove all txt files."""
-    counter = 0
+    counter: int = 0
 
     # loop through all files and folders
     for item in os.listdir():
-        item = Path(item)
+        item: Path = Path(item)
         if item.name[:2] in PREFIXES and item.suffix == TXT_EXT:
             os.remove(item)
             print(f'{item.name} file removed.')

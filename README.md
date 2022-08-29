@@ -66,6 +66,8 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='history'></div>
 
 ## Update History
+* v1.5.1: New Annotations:
+    * Annotations added into the whole project.
 * v1.5.0: One File To Rule Them All:
     * Reversed back to a single file.
 * ~~v1.4.1: Source Folder~~ (silly update):
