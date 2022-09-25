@@ -2,7 +2,7 @@
 all the matches.
 """
 
-__version__: str = 'v1.5.1'
+__version__: str = 'v1.6.0'
 __author__: str = 'Guto Hertzog'
 
 
@@ -11,274 +11,280 @@ import sys
 import time
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
-from pathlib import Path
+from typing import Iterator
 
 
-# ----------------------------------------------------------------------------
-#                              constants section
-# ----------------------------------------------------------------------------
-# encoding for reading and writing files
+# -----------------------------------------------------------------------------
+#                                  constants
+# -----------------------------------------------------------------------------
 ENCODING: str = 'utf-8'
-
-# index of the request time
-I_REQ_TIME: int = -1
-
-# file extension
-LOG_EXT: str = '.log'
-TXT_EXT: str = '.txt'
-
-# prefixes of the text files
-PREFIXES: list[str] = ['i-', 'e-', 's-']
-
 LOG_FILE_NAME: str = 'log-finder.log'
 
 
-# ----------------------------------------------------------------------------
-#                                logger section
-# ----------------------------------------------------------------------------
-def save_argv() -> None:
-    """Append into a log file all arguments sent."""
+# -----------------------------------------------------------------------------
+#                                 logger class
+# -----------------------------------------------------------------------------
+class Logger():
+    """Logger Class"""
 
-    # get the current date and time for the record
-    now: datetime = datetime.now()
-    dt_string: str = now.strftime("%d-%m-%Y %H:%M:%S")
+    def save_argv(self) -> None:
+        """Append into a log file all arguments sent."""
+        # get the current date and time for the record
+        dt_str: str = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-    # string to be saved
-    line: str = dt_string + ' - arguments : ' + ' '.join(sys.argv[1:]) + '\n'
+        # string to be saved
+        line: str = dt_str + ' - arguments : ' + ' '.join(sys.argv[1:]) + '\n'
 
-    with open(LOG_FILE_NAME, 'a', encoding=ENCODING) as file:
-        file.write(line)
+        with open(LOG_FILE_NAME, 'a', encoding=ENCODING) as file:
+            file.write(line)
 
-
-def purge_log() -> None:
-    """Delete all registries of the log file."""
-    with open(LOG_FILE_NAME, 'w', encoding=ENCODING) as file:
-        file.writelines(' ')
-
-
-# ----------------------------------------------------------------------------
-#                           argument parser section
-# ----------------------------------------------------------------------------
-def arg_parser() -> list[list[str]]:
-    """Argument parser builder and check all received arguments to split them
-    into three different lists.
-
-    Returns:
-        return (list): Three lists with all conditions to search for.
-    """
-    parser: ArgumentParser = ArgumentParser(
-        prog='log-finder',
-        description='search for common words in log files')
-
-    parser.add_argument('-v', '--version',
-                        action="version",
-                        version=f'%(prog)s {__version__}')
-    parser.add_argument('-i', '--inc',
-                        action="extend",
-                        default=[],
-                        nargs="+",
-                        type=str,
-                        help='one or more argument to be included on the\
-                            search')
-    parser.add_argument('-e', '--exc',
-                        action="extend",
-                        default=[],
-                        nargs="+",
-                        type=str,
-                        help='one or more argument to be excluded from the\
-                            search')
-    parser.add_argument('-s', '--sec',
-                        action="extend",
-                        default=[],
-                        nargs="+",
-                        type=str,
-                        help='search by one or more request time equals or\
-                            greater than the argument')
-
-    args: Namespace = parser.parse_args()
-
-    return args.inc, args.exc, args.sec
+    def purge_log(self) -> None:
+        """Delete all registries of the log file (for development)."""
+        with open(LOG_FILE_NAME, 'w', encoding=ENCODING) as file:
+            file.write('')
 
 
-# ----------------------------------------------------------------------------
-#                               searcher section
-# ----------------------------------------------------------------------------
-def get_logs() -> list[str]:
-    """Search for all log files in the current directory of this python file.
+# -----------------------------------------------------------------------------
+#                                 system class
+# -----------------------------------------------------------------------------
+class System():
+    """System Class"""
 
-    Returns:
-        logs (list): A list of all log files found in the folder or an empty
-        list.
-    """
-    everything: list[str] = os.listdir()
+    @staticmethod
+    def clear_screen() -> None:
+        """Clear screen function of any OS."""
+        os.system('cls' if os.name == 'nt' else 'clear')
 
-    # remove log file generated from the search
-    everything.remove(LOG_FILE_NAME)
-
-    logs: list = []
-    for item in everything:
-        item: Path = Path(item)
-        if item.suffix == LOG_EXT:
-            logs.append(item)
-
-    return logs
+    @staticmethod
+    def finish() -> None:
+        """Exits the program."""
+        sys.exit()
 
 
-def read_log_file(log: str) -> str:
-    """Load a single log file from the disc and yield every line.
+# -----------------------------------------------------------------------------
+#                                 timer class
+# -----------------------------------------------------------------------------
+class Timer():
+    """Timer class to calculate the execution time."""
 
-    Args:
-        log (str): Name of the log file to be open.
+    def __init__(self) -> None:
+        self.start_time: float = 0.0
+        self.end_time: float = 0.0
 
-    Yield:
-        str: Every line of the file.
-    """
-    with open(log, 'r', encoding=ENCODING) as file:
-        for line in file.readlines():
-            yield line
+    def timer_start(self) -> None:
+        """Start the clock."""
+        self.start_time: float = time.time()
 
+    def timer_finish(self) -> None:
+        """Finish the clock."""
+        self.end_time: float = time.time() - self.start_time
 
-def save_found_records(matches: list, name: str, log: str) -> None:
-    """The matches will be saved into a file with the name pattern below.
-
-    Examples:
-        i-<arg>-<log_file_name>.txt: For includes.
-        e-<arg>-<log_file_name>.txt: For excludes.
-        s-<time>-<log_file_name>.txt: For request time.
-
-    Args:
-        matches (list): A list with all matches found inside a log file.
-        name (str): First part of the file name.
-        log (str): Sent to create the text file name.
-    """
-    # Replace the log extension for text extension
-    log: str = log.replace(LOG_EXT, '.txt')
-    file_name: str = name + '-' + log
-
-    with open(file_name, 'w', encoding=ENCODING) as file:
-        file.writelines(matches)
-
-    print(f'File {file_name} saved with {len(matches)} matches.')
+    def show(self) -> None:
+        """Shows the result."""
+        print(f'\n--- Search completed in {self.end_time:.4f} seconds ---')
 
 
-def search_records(log: str, arg: str, include: bool) -> list[str]:
-    """Pass through all records of the log.
+# -----------------------------------------------------------------------------
+#                                searcher class
+# -----------------------------------------------------------------------------
+class Searcher():
+    """Searcher Class"""
 
-    If the include is True (include), all the records that match the arg will
-    be saved.
+    # constant for the prefixes
+    _prefixes: list[str] = ['i-', 'e-', 's-']
+    # index of the request time
+    _i_req_time: int = -1
+    # log file extension
+    _log_ext: str = '.log'
 
-    If the include is False (exclude), will save the records that DON'T match
-    the arg.
+    def __init__(self) -> None:
+        # variable to hold the arguments
+        self.args: Namespace = None
+        # variable to fill the logger before the search
+        self.logger: Logger = Logger()
+        # list of log files found
+        self.logs: list[str] = []
 
-    Args:
-        log (str): Name of the log file to be open.
-        arg (str): Argument to be searched in every record of the file.
-        include (bool): Checks if the arg is include or exclude.
+        # structure to be used to fill for each argument
+        self.struct: dict = {
+            'argument': '',
+            'log': '',
+            'matches': [],
+            'prefix': ''
+        }
 
-    Returns:
-        return (list): A list of strings of all matches found.
-    """
-    lines: str = read_log_file(log)
+        self._arg_parser()
 
-    if include:
-        return [line for line in lines if arg.lower() in line.lower()]
+    def _arg_parser(self) -> None:
+        """Argument parser split the them into three different lists."""
+        parser: ArgumentParser = ArgumentParser(
+            prog='log-finder',
+            description='search for common words in log files')
 
-    return [line for line in lines if arg.lower() not in line.lower()]
+        parser.add_argument('-v', '--version',
+                            action="version",
+                            version=f'%(prog)s {__version__}')
+        parser.add_argument('-i', '--inc',
+                            action="extend",
+                            default=[],
+                            nargs="+",
+                            type=str,
+                            help='one or more argument to be included on the\
+                                search')
+        parser.add_argument('-e', '--exc',
+                            action="extend",
+                            default=[],
+                            nargs="+",
+                            type=str,
+                            help='one or more argument to be excluded from the\
+                                search')
+        parser.add_argument('-s', '--sec',
+                            action="extend",
+                            default=[],
+                            nargs="+",
+                            type=str,
+                            help='search by one or more request time equals or\
+                                greater than the argument')
 
+        self.args: Namespace = parser.parse_args()
 
-def search_by_time(log: str, arg: int) -> list[str]:
-    """Will pass through all records of the log looking for the request time.
-    It'll match if it's greater or equa
+        # no argument was sent when the file was executed, exits the program
+        if not self.args.inc and not self.args.exc and not self.args.sec:
+            print('\n\tInsufficient Arguments\n')
+            print('Please, use `python main.py --help` for documentation.')
+            System.finish()
 
-    Args:
-        log (str): Name of the log file to be open.
-        arg (int): Argument to be searched in every record of the file.
+        self.logger.save_argv()
 
-    Returns:
-        return (list): A list of strings of all matches found.
-    """
-    lines: str = read_log_file(log)
+    def get_logs(self) -> None:
+        """Search for all log files in the current directory."""
+        # get all files thar have '.log' in the end
+        self.logs = [e for e in os.listdir() if e[-4:] == self._log_ext]
 
-    matches: list = []
-    for line in lines:
-        temp_list: list[str] = line.split(' ')
-        if int(temp_list[I_REQ_TIME]) >= int(arg):
-            matches.append(line)
+        # remove log file generated from the search
+        self.logs.remove(LOG_FILE_NAME)
 
-    return matches
+    def main_search(self) -> None:
+        """Search inside the log files with the given arguments."""
+        print('--- Beginning search ---\n')
 
+        # start getting the logs
+        self.get_logs()
 
-# ----------------------------------------------------------------------------
-#                                system section
-# ----------------------------------------------------------------------------
-def clear_screen() -> None:
-    """Clear screen function of any OS."""
-    os.system('cls' if os.name == 'nt' else 'clear')
+        for log in self.logs:
+            self.struct['log'] = log
 
+            self.struct['prefix'] = self._prefixes[0]
+            for inc in self.args.inc:
+                self.struct['argument'] = inc
+                self.get_matches()
+                self.save_found_records()
 
-def finish() -> None:
-    """Exits the program."""
-    sys.exit()
+            self.struct['prefix'] = self._prefixes[1]
+            for exc in self.args.exc:
+                self.struct['argument'] = exc
+                self.get_matches()
+                self.save_found_records()
 
+            self.struct['prefix'] = self._prefixes[2]
+            for sec in self.args.sec:
+                self.struct['argument'] = sec
+                self.get_matches()
+                self.save_found_records()
 
-# ----------------------------------------------------------------------------
-#                                 main section
-# ----------------------------------------------------------------------------
-def start() -> None:
-    """Main function of the program."""
+    def get_matches(self) -> None:
+        """This method is going to be called several times, but it'll only
+        execute the portion of the code for the actual value of the
+        struct['prefix'].
+        """
+        iter_lines: Iterator = Searcher.read_log_file(self.struct['log'])
+        # restart the value
+        self.struct['matches'] = []
 
-    includes, excludes, seconds = arg_parser()
+        # prefix i-
+        if self.struct['prefix'] == self._prefixes[0]:
+            for line in iter_lines:
+                if self.struct['argument'].lower() in line.lower():
+                    self.struct['matches'].append(line)
+            return
 
-    save_argv()
+        # prefix e-
+        if self.struct['prefix'] == self._prefixes[1]:
+            for line in iter_lines:
+                if self.struct['argument'].lower() not in line.lower():
+                    self.struct['matches'].append(line)
+            return
 
-    # No argument was sent when the file was executed, exits the program
-    if not includes and not excludes and not seconds:
-        print('\n\tInsufficient Arguments\n')
-        print('Please, use `python main.py --help` for documentation.')
+        # prefix s-
+        if self.struct['prefix'] == self._prefixes[2]:
+            for line in iter_lines:
+                temp_list: list[str] = line.split(' ')
+                req_time: int = int(temp_list[self._i_req_time])
+
+                if req_time >= int(self.struct['argument']):
+                    self.struct['matches'].append(line)
+            return
+
+        # space for future updates
         return
 
-    logs: list[str] = get_logs()
+    def save_found_records(self) -> None:
+        """The matches will be saved into a file with the name pattern below.
 
-    # No log file was found in the current directory, exits the program
-    if not logs:
-        print('\n\tFile Not Found\n')
-        print('No log file was found in the current directory.')
-        print('Checks if at least one log file is in the same')
-        print('folder than this python file.')
-        return
+        Examples:
+            i-<arg>-<log_file_name>.txt: For includes.
+            e-<arg>-<log_file_name>.txt: For excludes.
+            s-<time>-<log_file_name>.txt: For request time.
+        """
+        # Replace the log extension for text extension
+        file_name: str = self.struct['prefix'] + self.struct['argument'] + '-'
+        file_name += self.struct['log'].replace(self._log_ext, '.txt')
 
-    # begins the timer
-    start_time: float = time.time()
+        if self.struct['matches']:
+            with open(file_name, 'w', encoding=ENCODING) as file:
+                file.writelines(self.struct["matches"])
 
-    print('--- Beginning search ---\n')
-    for log in logs:
-        for inc in includes:
-            matches: list[str] = search_records(log.name, inc, True)
-            if matches:
-                save_found_records(matches, 'i-'+inc, log.name)
+            print(
+                f'File {file_name} saved with {len(self.struct["matches"])} \
+                    matches.')
+        else:
+            if self.struct['prefix'] == self._prefixes[1]:
+                print(
+                    f"The argument '{self.struct['argument']}' was found all \
+                        over the {self.struct['log']} file.")
             else:
-                print(f"The argument '{inc}' wasn't found in {log.name} file.")
+                print(
+                    f"The argument '{self.struct['argument']}' wasn't found \
+                        in {self.struct['log']} file.")
 
-        for exc in excludes:
-            matches: list[str] = search_records(log.name, exc, False)
-            if matches:
-                save_found_records(matches, 'e-'+exc, log.name)
-            else:
-                print(f"The argument '{exc}' was found all over the {log.name}\
-                    file.")
+    @staticmethod
+    def read_log_file(log: str) -> Iterator:
+        """Load a single log file from the disc and yield every line.
 
-        for sec in seconds:
-            matches: list[str] = search_by_time(log.name, sec)
-            if matches:
-                save_found_records(matches, 's-'+sec, log.name)
-            else:
-                print(f"The argument '{sec}' wasn't found in {log.name} file.")
+        Args:
+            log (str): Name of the log file to be open.
 
-    end_time: float = (time.time() - start_time)
-    print(f'\n--- Search completed in {end_time:.4f} seconds ---')
+        Yield:
+            iterator: an iterator for every line of the file.
+        """
+        with open(log, 'r', encoding=ENCODING) as file:
+            for line in file.readlines():
+                yield line
 
 
+# -----------------------------------------------------------------------------
+#                                     main
+# -----------------------------------------------------------------------------
 if __name__ == "__main__":
-    clear_screen()
-    start()
-    finish()
+    System.clear_screen()
+
+    timer: Timer = Timer()
+    timer.timer_start()
+
+    search: Searcher = Searcher()
+    search.main_search()
+
+    timer.timer_finish()
+    timer.show()
+
+    System.finish()

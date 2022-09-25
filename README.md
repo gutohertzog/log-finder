@@ -44,7 +44,7 @@ $ python main.py -i 192.168. abc -e Mozilla -s 10 -i Chrome  # all searches comb
 ## Specificity
 The Apache log file can be configured with several different ways. See <a href="https://httpd.apache.org/docs/2.4/logs.html" target="_blank">Apache Log Documentation v2.4</a> for more information.
 
-Once you have the exact arrangement of your log file, the exact position of your time request, you will only have to change the index value in `I_REQ_TIME`.
+Once you have the exact arrangement of your log file, the exact position of your time request, you will only have to change the index value in `_i_req_time`.
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>
 
@@ -59,6 +59,7 @@ Once you have the exact arrangement of your log file, the exact position of your
 
 ## DONE
 * [X] Implement a log file with the history of searches.
+* [X] Implement classes.
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>
 
@@ -66,6 +67,10 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='history'></div>
 
 ## Update History
+* v1.6.0: A Very Classy Update:
+    * Converted all the funcions to classes (Logger, Searcher, System, Timer).
+    * Optimized the loop that pass through all arguments.
+    * Other small optimizations.
 * v1.5.1: New Annotations:
     * Annotations added into the whole project.
 * v1.5.0: One File To Rule Them All:
