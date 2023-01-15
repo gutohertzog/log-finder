@@ -12,7 +12,7 @@ Script to find registers with specific arguments inside Apache log files.
 
 ## About
 This project come to my mind because a lack of a way to track some registers inside a 300Mb Apache log file.
-I'll keep it working with a single file and no dependencies at all.
+I'll keep it working on it with a single file and no dependencies at all.
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>
 
@@ -29,7 +29,7 @@ In all three ways, you can search using multiple arguments at once separated by 
 Every argument of the search will be saved into a separate text file.
 
 Below are some examples of how you can run it:
-```
+```cmd
 $ python main.py -i abc 192.168.1.1  # get all records that have abc or 192.168.1.1
 $ python main.py -e Mozilla 192.168.1.  # get all records that DON'T have Mozilla or 192.168.1.
 $ python main.py -s 15 10 1 90  # get all records that the request time is greater or equal than 15 or 10 or 1 or 90 seconds
@@ -67,59 +67,98 @@ Once you have the exact arrangement of your log file, the exact position of your
 <div id='history'></div>
 
 ## Update History
-* v1.6.0: A Very Classy Update:
-    * Converted all the funcions to classes (Logger, Searcher, System, Timer).
-    * Optimized the loop that pass through all arguments.
-    * Other small optimizations.
-* v1.5.1: New Annotations:
-    * Annotations added into the whole project.
-* v1.5.0: One File To Rule Them All:
-    * Reversed back to a single file.
-* ~~v1.4.1: Source Folder~~ (silly update):
-    * ~~Created a `source` folder for the code.~~
-    * ~~Fixed an issue with the last commit.~~
-* v1.4.0: Logger and Multifiles:
-    * The search now is case-insensitive.
-    * Created `logger.py` to manage the log file `log-finder-log`.
-    * Created `__init__.py` file to store version and author.
-    * Created `parser.py` file to manipulate argparser functions.
-    * Created `remove_txt.py` file to remove all the results of the search. For development.
-    * Better code organization with the creation of `util.py` file.
-    * Better code inside `main.py` file.
-    * Added the log file `apache_logs.log` for tests.
-    * Fixed some Engllish misspell.
-    * `.gitignore` updated.
-    * `README.md` updated.
-* v1.3.1: Match Counter:
-    * Added matches counter.
-    * Better README.
-* v1.3.0: ArgumentParser:
-    * Argument Parser added to project.
-        * See <a href="#running">Running the script</a> for details.
-    * Use of Path library to manage files.
-    * The function `read_log_file` now uses yields instead then return a huge list of all records. Much better performance and saver memory.
-    * Better comments.
-    * Now shows the execution time at the end.
-* v1.2.1: Better Comments and Messages:
-    * Better documentation.
-    * Messages of starting and ending.
-* v1.2.0: Includent Excludent Update:
-    * Fixed minor translations.
-    * Constant for encoding format.
-    * Better variable names.
-    * Better documentation.
-    * Added specific searches:
-        * Includents: search all matches of the arguments.
-        * Excludents: search all except the matches with the prefix '-'.
-        * sec=: search by time request (greater or equal) at in specific position, given the `I_REQ_TIME` value.
-    * Fixed the issue with the request time search.
-* v1.1.0: English Update:
-    * Translated to english.
-    * Readme improved.
-    * Better documentation.
-    * Minor code improvements.
-* v1.0.0: First Commit:
-    * Repository creation.
-    * First version added (in Portuguese and poor documentation).
+<details>
+    <summary>v1.6.1 : Better Comments</summary>
+
+* Readme updated.
+* Comments updated.
+</details>
+<details>
+    <summary>v1.6.0 : A Very Classy Update</summary>
+
+* Converted all the funcions to classes (`Logger`, `Searcher`, `System`, `Timer`).
+* Optimized the loop that pass through all arguments.
+* Other small optimizations.
+</details>
+<details>
+    <summary>v1.5.1 : New Annotations</summary>
+
+* Annotations added into the whole project.
+</details>
+<details>
+    <summary>v1.5.0 : One File To Rule Them All</summary>
+
+* Reversed back to a single file.
+</details>
+<details>
+    <summary>v1.4.1 : Source Folder</summary>
+
+* Created a source folder for the code.
+* Fixed an issue with the last commit.
+</details>
+<details>
+    <summary>v1.4.0 : Logger and Multifiles</summary>
+
+* The search is now case-insensitive.
+* Created `logger.py` to manage the log file `log-finder-log`.
+* Created `__init__.py` file to store version and author.
+* Created `parser.py` file to manipulate argparser functions.
+* Created `remove_txt.py` file to remove all the results of the search. For development.
+* Better code organization with the creation of `util.py` file.
+* Better code inside `main.py` file.
+* Added the log file `apache_logs.log` for tests.
+* Fixed some Engllish misspell.
+* `.gitignore` updated.
+* `README.md` updated.
+</details>
+<details>
+    <summary>v1.3.1 : Match Counter</summary>
+
+* Added matches counter.
+* Better README.
+</details>
+<details>
+    <summary>v1.3.0 : ArgumentParser</summary>
+
+* Argument Parser added to project.
+    * See <a href="#running">Running the script</a> for details.
+* Use of Path library to manage files.
+* The function `read_log_file` now uses yields instead then return a huge list of all records. Much better performance and saver memory.
+* Better comments.
+* Now shows the execution time at the end.
+</details>
+<details>
+    <summary>v1.2.1 : Better Comments and Messages</summary>
+
+* Better documentation.
+* Messages of starting and ending.
+</details>
+<details>
+    <summary>v1.2.0 : Includent Excludent Update</summary>
+
+* Fixed minor translations.
+* Constant for encoding format.
+* Better variable names.
+* Better documentation.
+* Added specific searches:
+    * Includents (`-i`) : search all matches of the arguments.
+    * Excludents (`-e`) : search all except the matches with the prefix '-'.
+    * Secondos (`sec=`) : search by time request (greater or equal) at in specific position, given the `I_REQ_TIME` value.
+* Fixed the issue with the request time search.
+</details>
+<details>
+    <summary>v1.1.0 : English Update</summary>
+
+* Translated to english.
+* Readme improved.
+* Better documentation.
+* Minor code improvements.
+</details>
+<details>
+    <summary>v1.0.0 : First Commit</summary>
+
+* Repository creation.
+* First version added (in Portuguese and poor documentation).
+</details>
 
 <p align='right'>(<a href='#top'>back to top</a>)</p>

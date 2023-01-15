@@ -2,7 +2,7 @@
 all the matches.
 """
 
-__version__: str = 'v1.6.0'
+__version__: str = 'v1.6.1'
 __author__: str = 'Guto Hertzog'
 
 
@@ -25,7 +25,7 @@ LOG_FILE_NAME: str = 'log-finder.log'
 #                                 logger class
 # -----------------------------------------------------------------------------
 class Logger():
-    """Logger Class"""
+    """Class responsible for create and update the log."""
 
     def save_argv(self) -> None:
         """Append into a log file all arguments sent."""
@@ -48,7 +48,7 @@ class Logger():
 #                                 system class
 # -----------------------------------------------------------------------------
 class System():
-    """System Class"""
+    """Class to handle some system stuff"""
 
     @staticmethod
     def clear_screen() -> None:
@@ -80,7 +80,7 @@ class Timer():
         self.end_time: float = time.time() - self.start_time
 
     def show(self) -> None:
-        """Shows the result."""
+        """Shows the amount of time spent."""
         print(f'\n--- Search completed in {self.end_time:.4f} seconds ---')
 
 
@@ -99,13 +99,13 @@ class Searcher():
 
     def __init__(self) -> None:
         # variable to hold the arguments
-        self.args: Namespace = None
+        self.args: None = None
         # variable to fill the logger before the search
         self.logger: Logger = Logger()
         # list of log files found
         self.logs: list[str] = []
 
-        # structure to be used to fill for each argument
+        # structure to be used to fill each argument
         self.struct: dict = {
             'argument': '',
             'log': '',
@@ -148,7 +148,7 @@ class Searcher():
 
         self.args: Namespace = parser.parse_args()
 
-        # no argument was sent when the file was executed, exits the program
+        # no argument was sent when the file was executed, exit the program
         if not self.args.inc and not self.args.exc and not self.args.sec:
             print('\n\tInsufficient Arguments\n')
             print('Please, use `python main.py --help` for documentation.')
@@ -158,10 +158,10 @@ class Searcher():
 
     def get_logs(self) -> None:
         """Search for all log files in the current directory."""
-        # get all files thar have '.log' in the end
+        # get all files that have '.log' in the end
         self.logs = [e for e in os.listdir() if e[-4:] == self._log_ext]
 
-        # remove log file generated from the search
+        # remove log file generated from search
         self.logs.remove(LOG_FILE_NAME)
 
     def main_search(self) -> None:
@@ -262,7 +262,7 @@ class Searcher():
         """Load a single log file from the disc and yield every line.
 
         Args:
-            log (str): Name of the log file to be open.
+            log (str): name of the log file to be open.
 
         Yield:
             iterator: an iterator for every line of the file.
