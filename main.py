@@ -3,7 +3,7 @@ all the matches.
 """
 
 __version__: str = 'v1.6.1'
-__author__: str = 'Guto Hertzog'
+__author__: str = 'Guto hertzog'
 
 
 import os
@@ -14,9 +14,9 @@ from datetime import datetime
 from typing import Iterator
 
 
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 #                                  constants
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 ENCODING: str = 'utf-8'
 LOG_FILE_NAME: str = 'log-finder.log'
 
